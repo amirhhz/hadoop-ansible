@@ -8,7 +8,7 @@
   sudo: true
   roles:
     - common
-    - postfix_mandrill
+    # - postfix_mandrill
     - ganglia_monitor
 
 - hosts: 2_links_aggregated
