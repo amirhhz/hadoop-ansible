@@ -17,7 +17,7 @@
     - /etc/pam.d/common-session-noninteractive
 
 - name: install commonly used packages via apt
-  apt: pkg={{ item }}
+  apt: pkg={{ item }} update_cache=yes
   with_items:
     - checkinstall
     - htop
