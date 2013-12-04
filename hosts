@@ -19,7 +19,7 @@ hslave01
 hmaster01
 
 [datanodes]
-hslave[01:06]
+hslave[01:03]
 
 [nodemanagers:children]
 datanodes
@@ -48,12 +48,12 @@ hmaster02
 # Presto Nodes
 # ============
 
-[presto_coordinators]
-hmaster02
+# [presto_coordinators]
+# hmaster02
 
-[presto_workers]
-hslave07
-hslave08
+# [presto_workers]
+# hslave07
+# hslave08
 
 # Groups
 # ======
