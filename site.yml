@@ -247,7 +247,20 @@
   sudo: true
   roles:
     - postgresql_server
+
+- hosts: hive_metastore:hue_server
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
     - cdh_hive_config
+
+- hosts: hive_metastore
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - postgresql_jdbc_for_hive
 
 - hosts: hive_metastore
   accelerate: "{{ accelerate }}"
@@ -293,6 +306,14 @@
       shell: creates=/data/dfs/.hivewarehousedirchmodded sleep 5 && hadoop fs -chmod -R 1777 /user/hive/warehouse && touch /data/dfs/.hivewarehousedirchmodded
       tags:
         - hive
+
+- hosts: hue_server
+  user: ansibler
+  sudo: true
+  roles:
+    - cdh_hue
+  tags:
+    - hue
 
 - hosts: presto_coordinators
   accelerate: "{{ accelerate }}"

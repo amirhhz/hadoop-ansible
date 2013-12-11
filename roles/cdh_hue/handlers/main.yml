@@ -1,0 +1,4 @@
+---
+- name: restart hue
+  service: name=hue state=restarted
+  ignore_errors: yes

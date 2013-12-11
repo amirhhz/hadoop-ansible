@@ -1,0 +1,26 @@
+---
+- name: install hue meta-package and hue server
+  apt: pkg={{ item }}
+  with_items:
+    - hue
+    - hue-server
+
+- name: set WebHDFS URL for primary NameNode in hue.ini
+  lineinfile:
+    dest=/etc/hue/conf/hue.ini
+    regexp=webhdfs_url=
+    line=webhdfs_url=http://{{ hostvars[groups['namenodes'][0]]['ansible_default_ipv4']['address'] }}:50070/webhdfs/v1/
+    state=present
+  notify:
+    - restart hue
+  tags: configuration
+
+- name: set hive_conf_dir in hue.ini
+  lineinfile:
+    dest=/etc/hue/conf/hue.ini
+    regexp=hive_conf_dir=
+    line=hive_conf_dir=/etc/hive/conf.{{ site_name }}/
+    state=present
+  notify:
+    - restart hue
+  tags: configuration

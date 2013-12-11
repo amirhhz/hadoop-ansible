@@ -10,6 +10,11 @@
         <value>{{ site_name }}</value>
     </property>
 
+    <property>
+        <name>dfs.webhdfs.enabled</name>
+        <value>true</value>
+    </property>
+
     <!-- HA configuration, see http://www.cloudera.com/content/cloudera-content/cloudera-docs/CDH4/latest/PDF/CDH4-High-Availability-Guide.pdf -->
     <property>
         <name>dfs.ha.namenodes.{{ site_name }}</name>
