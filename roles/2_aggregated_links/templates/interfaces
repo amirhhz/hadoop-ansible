@@ -8,19 +8,14 @@ auto lo
 iface lo inet loopback
 
 {% for interface in ansible_interfaces|sort if not interface.startswith('lo') %}
-
 auto {{ interface }}
 iface {{ interface }} inet manual
+hardware-dma-ring-rx 512
+hardware-dma-ring-tx 512
 {% if loop.index > 1 %}
-pre-up sleep 3
+pre-up sleep 2
 {% endif %}
-hardware-dma-ring-rx 4096
-hardware-dma-ring-tx 4096
-ethernet-pause-autoneg off
-ethernet-pause-rx off
-ethernet-pause-tx off
 bond-master bond0
-
 {% endfor %}
 
 # The primary (bonded) network interface

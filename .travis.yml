@@ -1,6 +1,43 @@
 language: python
-python: "2.7"
+python: '2.6'
+addons:
+  firefox: "25.0.1"
 install:
+  - pip install python-keyczar==0.71c
   - pip install ansible
+  - sudo pip install dopy
+before_script:
+  - ansible-playbook -i localhost --extra-vars "api_key_password=$DO_API_KEY client_id=$DO_CLIENT_ID" do_cluster.yml
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - "wget http://download.slimerjs.org/v0.9/0.9.0/slimerjs-0.9.0.zip"
+  - "unzip slimerjs-0.9.0.zip && mv slimerjs-0.9.0 ./slimerjs"
+  - "gem install travis-artifacts"
+  - eval `ssh-agent`
+  - "chmod 400 travis.ssh && ssh-add travis.ssh"
+  - sleep 300 # DigitalOcean can be damn slow creating/booting droplets
 script:
-  - ansible-playbook --syntax-check -i hosts site.yml
+  - ansible-playbook -i hosts --extra-vars "authorized_rsa_key='$(cat travis.ssh.pub)'" -u root bootstrap/bootstrap.yml
+  - rm -f /home/travis/.fireball.keys
+  - ansible-playbook -i hosts --extra-vars "accelerate=false" site.yml
+after_success:
+  - "slimerjs screenshot.js http://hmaster01:50070 active-namenode.png"
+  - "slimerjs screenshot.js http://hmaster02:50070 standby-namenode.png"
+  - "slimerjs screenshot.js http://monitor01/ganglia ganglia.png"
+  - "slimerjs screenshot.js http://monitor01/smokeping/smokeping.cgi?target=_charts smokeping.png"
+  - "travis-artifacts upload --path active-namenode.png"
+  - "travis-artifacts upload --path standby-namenode.png"
+  - "travis-artifacts upload --path ganglia.png"
+  - "travis-artifacts upload --path smokeping.png"
+  - sudo /etc/rc6.d/K10do_destroy.sh
+after_failure:
+  - sudo /etc/rc6.d/K10do_destroy.sh
+env:
+  global:
+    - ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_SSH_ARGS="-o ForwardAgent=yes"
+    - SLIMERJSLAUNCHER=$(which firefox) DISPLAY=:99.0 PATH=$TRAVIS_BUILD_DIR/slimerjs:$PATH
+    - secure: "YBnTdEJ6U6i5no2eRlVC5dsqvSmYqULG+zWyTk2KqWGGMCza3RFi0wUueK3NuN+tl4Ijzf26Kma7wqdjkort0UrfxiH2xd4DWv3LvWz5vpKFP4GaSQGcd5zokHAJJ5hs0JgKY5jwGfoNHcnL16oUJEtptfLqTjGKRIHS+Ye1LmQ="
+    - secure: "DmsCmxwGBWVnYV6CDuCiJsATk85eFUr/Zs7BeYWjlKvAQz4Np9GTDECe3rE1KAA42PZrbvyAdWD31Np9QF0zj8Aq6poCvZ0c0Mib2bRi3eOP8tPL6EUggAl125UkoAZzxtgRWvILZfeRGhBzYsRX9C7/UtA8F8Ij0hXknkgdY48="
+    - ARTIFACTS_AWS_REGION=us-east-1 ARTIFACTS_S3_BUCKET=hadoop-ansible
+    - secure: "QVbUIhd/KU8HmXf0hnU4DRKjT5zzAZNKEhW6zAr7hLHvgCYFQEyc3idtmbjMPxEtIqpudR/cu+W2LA0Sl6FWIPVKweTJLU5/ocT/oDEBR4R/J2jZD8yEun6fiNPhbJLfAGX65sZLJYuPows4NVXAxt37jHR2z3tMHLVzALVSuOE="
+    - secure: "Ipe61XLKD1rAo/3NDUsrlw40Ab6rXwQibDLALBGJikGQvbMiQrXRdEniGdlHyV9cnSoZ5+Akqn4SNZ0GmgnWIbhkUwzhFn7/ylL8O+KlGd8mAk8PKJyFTuVwSNBFluhnSH49xDobZp9OSMiColteNALxhXYh53de4ard1W27i88="

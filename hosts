@@ -2,9 +2,9 @@
 # ============
 
 [zookeepers] # minimal 3, must be odd number of hosts
-hmaster01 zoo_id=1
-hmaster02 zoo_id=2
-hslave01 zoo_id=3
+hmaster01 zookeeper_id=1
+hmaster02 zookeeper_id=2
+hslave01 zookeeper_id=3
 
 [namenodes]
 hmaster01 ganglia_accept=true
@@ -19,7 +19,7 @@ hslave01
 hmaster01
 
 [datanodes]
-hslave[01:03]
+hslave[01:04]
 
 [nodemanagers:children]
 datanodes
@@ -39,6 +39,9 @@ namenodes
 [regionservers:children]
 datanodes
 
+[elasticsearch]
+monitor01
+
 [monitors]
 monitor01
 
@@ -55,19 +58,19 @@ hmaster02
 # hmaster02
 
 # [presto_workers]
-# hslave07
-# hslave08
+# hslave03
+# hslave04
 
 # Groups
 # ======
 
 [masters:children]
-zookeepers
 namenodes
 resourcemanager
 hbase_masters
 
 [slaves:children]
+zookeepers
 datanodes
 nodemanagers
 regionservers

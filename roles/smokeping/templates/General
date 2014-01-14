@@ -1,0 +1,24 @@
+# {{ ansible_managed }}
+
+*** General ***
+
+owner   = {{ site_name|capitalize }}
+{% if notify_email is defined %}
+contact = {{ notify_email }}
+{% else %}
+contact = root@localhost
+{% endif %}
+
+# NOTE: do not put the Image Cache below cgi-bin
+# since all files under cgi-bin will be executed ... this is not
+# good for images.
+cgiurl = http://{{ hostvars[groups["monitors"][0]]["ansible_hostname"] }}/cgi-bin/smokeping.cgi
+
+# specify this to get syslog logging
+syslogfacility = local0
+
+# each probe is now run in its own process
+# disable this to revert to the old behaviour
+# concurrentprobes = no
+
+@include /etc/smokeping/config.d/pathnames

@@ -1,17 +1,19 @@
-Hadoop Ansible Playbook [![Build Status](https://travis-ci.org/analytically/hadoop-ansible.png)](https://travis-ci.org/analytically/hadoop-ansible)
+Hadoop Ansible Playbook [![Build Status](https://travis-ci.org/analytically/hadoop-ansible.png)](https://travis-ci.org/analytically/hadoop-ansible) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/analytically/hadoop-ansible/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 =======================
 
 [Ansible](http://www.ansibleworks.com/) Playbook that installs a CDH4 [Hadoop](http://hadoop.apache.org/)
 cluster (running on Java 7, supported from [CDH 4.4](http://www.cloudera.com/content/cloudera-content/cloudera-docs/CDH4/latest/CDH4-Release-Notes/Whats_New_in_4-4.html)),
-with [Ganglia](http://ganglia.sourceforge.net/), [Fluentd](http://fluentd.org/), [ElasticSearch](http://www.elasticsearch.org/)
-and [Kibana 3](http://www.elasticsearch.org/overview/kibana/) for monitoring and centralized log indexing.
+with [HBase](http://hbase.apache.org/), Hive, [Presto](http://prestodb.io/) for analytics, and [Ganglia](http://ganglia.sourceforge.net/),
+[Smokeping](http://oss.oetiker.ch/smokeping/), [Fluentd](http://fluentd.org/), [ElasticSearch](http://www.elasticsearch.org/)
+and [Kibana](http://www.elasticsearch.org/overview/kibana/) for monitoring and centralized log indexing.
 
-Hire/Follow [@analytically](http://twitter.com/analytically). **NEW: Deploys [Hive](http://hive.apache.org) Metastore and [Facebook Presto](http://prestodb.io)!**
+Hire/Follow [@analytically](http://twitter.com/analytically). Browse the CI [build screenshots](http://hadoop-ansible.s3-website-us-east-1.amazonaws.com/#artifacts/).
 
 ### Requirements
 
-  - [Ansible](http://www.ansibleworks.com/) 1.4 or later
-  - 8+1 Ubuntu 12.04 LTS, 13.04 or 13.10 hosts
+  - [Ansible](http://www.ansibleworks.com/) 1.4 or later (`pip install ansible`)
+  - 6 + 1 Ubuntu 12.04 LTS, 13.04 or 13.10 hosts - see [ubuntu-netboot-tftp](https://github.com/analytically/ubuntu-netboot-tftp) if you need automated server installation
+  - [Mandrill](http://mandrill.com/) username and API key for sending email notifications
   - `ansibler` user in sudo group without sudo password prompt (see Bootstrapping section below)
 
 ### Cloudera ([CDH4](http://www.cloudera.com/content/support/en/documentation/cdh4-documentation/cdh4-documentation-v4-latest.html)) Hadoop Roles
@@ -36,7 +38,7 @@ If you're assembling your own Hadoop playbook, these roles are available for you
   - [`cdh_hbase_regionserver`](roles/cdh_hbase_regionserver/) - installs HBase RegionServer
   - [`cdh_hive_common`](roles/cdh_hive_common/) - common packages shared by all Hive nodes
   - [`cdh_hive_config`](roles/cdh_hive_config/) - common configuration shared by all Hive nodes
-  - [`cdh_hive_metastore`](roles/cdh_hive_metastore/) - installs Hive metastore (using PostgreSQL database)
+  - [`cdh_hive_metastore`](roles/cdh_hive_metastore/) - installs Hive metastore (with PostgreSQL database)
   - [`cdh_zookeeper_server`](roles/cdh_zookeeper_server/) - installs ZooKeeper Server
 
 ### [Facebook Presto](http://prestodb.io/) Roles
@@ -45,27 +47,20 @@ If you're assembling your own Hadoop playbook, these roles are available for you
   - [`presto_coordinator`](roles/presto_coordinator/) - installs Presto coordinator config
   - [`presto_worker`](roles/presto_worker/) - installs Presto worker config
 
-### Configure
+### Configuration
 
-Customize the following files:
+Set the following variables using `--extra-vars` or editing [`group_vars/all`](group_vars/all):
 
 Required:
 
-- [`group_vars/all`](group_vars/all) - site_name and notify_email
+- `site_name` - used as Hadoop nameservices and various directory names. Alphanumeric only.
 
 Optional:
 
-- [`roles/postfix_mandrill/defaults/main.yml`](roles/postfix_mandrill/defaults/main.yml) - set your [Mandrill](http://mandrill.com/) account (API key)
-- [`roles/2_aggregated_links/defaults/main.yml`](roles/2_aggregated_links/defaults/main.yml) - aggregated link bond mode and mtu
-- [`roles/cdh_hadoop_config/defaults/main.yml`](roles/cdh_hadoop_config/defaults/main.yml) - Hadoop settings
-- [`roles/presto_coordinator/templates/config.properties`](roles/cdh_hadoop_config/defaults/main.yml) - Presto coordinator configuration
-- [`roles/presto_worker/templates/config.properties`](roles/cdh_hadoop_config/defaults/main.yml) - Presto coordinator configuration
-
-##### Role Vars
-
-When specifying/reusing roles, one can override the vars, eg.:
-
-`- { role: postfix_mandrill, postfix_domain: example.com, mandrill_username: joe, mandrill_api_key: 123 }`
+- Email notification: `notify_email`, `postfix_domain`, `mandrill_username`, `mandrill_api_key`
+- [`roles/common`](roles/common/defaults/main.yml): `kernel_swappiness`(0), `nofile` limits, ntp servers and `rsyslog_polling_interval_secs`(10)
+- [`roles/2_aggregated_links`](roles/2_aggregated_links/defaults/main.yml): `bond_mode` (balance-alb) and `mtu` (9216)
+- [`roles/cdh_hadoop_config`](roles/cdh_hadoop_config/defaults/main.yml): `dfs_blocksize` (268435456), `max_xcievers` (4096), `heapsize` (12278)
 
 #### Adding hosts
 
@@ -85,7 +80,7 @@ Make sure that the `zookeepers` and `journalnodes` groups contain at least 3 hos
 Since we're using unicast mode for Ganglia (which significantly reduces chatter), you may have to wait 60 seconds
 after node startup before it is seen/shows up in the web interface.
 
-### Installing Hadoop
+### Installation
 
 To run Ansible:
 
@@ -94,7 +89,8 @@ To run Ansible:
 ```
 
 To e.g. just install ZooKeeper, add the `zookeeper` tag as argument (available tags: apache, bonding, configuration,
-elasticsearch, fluentd, ganglia, hadoop, hbase, hive, java, kibana, ntp, presto, rsyslog, tdagent, zookeeper):
+elasticsearch, fluentd, ganglia, hadoop, hbase, hive, java, kibana, logstash_index_cleaner, ntp, postfix, postgres, presto,
+rsyslog, tdagent, zookeeper):
 
 ```sh
 ./site.sh zookeeper
@@ -102,16 +98,29 @@ elasticsearch, fluentd, ganglia, hadoop, hbase, hive, java, kibana, ntp, presto,
 
 #### What else is installed?
 
-  - [link aggregation](roles/2_aggregated_links/templates/interfaces) configures [Link Aggregation](https://help.ubuntu.com/community/UbuntuBonding) if 2 interfaces are available on the nodes (`balance-alb` by default)
-  - [Htop](http://htop.sourceforge.net/)
-  - curl, checkinstall, intel-microcode/amd64-microcode, net-tools, zip
+  - To improve performance, [sysctl tuning](roles/common/templates/sysctl.conf)
+  - [link aggregation](roles/2_aggregated_links/templates/interfaces) configures [Link Aggregation](https://help.ubuntu.com/community/UbuntuBonding) if 2 interfaces are available
+  - [htop](http://htop.sourceforge.net/), curl, checkinstall, heirloom-mailx, intel-microcode/amd64-microcode, net-tools, zip
   - [NTP](http://www.ntp.org/) configured with the [Oxford University NTP service](http://www.oucs.ox.ac.uk/network/ntp/) by default
   - [Postfix](http://www.postfix.org/) with [Mandrill](http://mandrill.com/) configuration
   - [local 'apt' repository for Oracle Java packages](https://github.com/flexiondotorg/oab-java6)
   - unattended upgrades [email to inform success/failure](roles/postfix_mandrill/templates/50unattended-upgrades)
   - php5-cli, sysstat, hddtemp to report [device metrics](roles/ganglia_monitor/templates/device-metrics.php)
-    (reads/writes/temp) to Ganglia [every 10 minutes](roles/ganglia_monitor/templates/device-metrics.cron.d).
+    (reads/writes/temp) to Ganglia [every 10 minutes](roles/ganglia_monitor/templates/device-metrics.cron.d)
   - LZO (Lempel–Ziv–Oberhumer) and [Google Snappy 1.1.1](https://code.google.com/p/snappy/) compression
+  - a [fork of openjdk's FloatingDecimal](https://github.com/airlift/floatingdecimal) to fix monitor contention when parsing doubles due to a static synchronized method
+  - [logstash index cleaner](https://github.com/logstash/expire-logs), defaults to maximum 30 GB of data in ElasticSearch, via cron daily at 2:00AM
+  - [SmokePing](http://oss.oetiker.ch/smokeping/) to keep track of network latency
+
+#### URL's
+
+After the installation, go here:
+
+  - Ganglia at [monitor01/ganglia](http://monitor01/ganglia/)
+  - Kibana at [monitor01/kibana/index.html#/dashboard/file/logstash.json](http://monitor01/kibana/index.html#/dashboard/file/logstash.json)
+  - Smokeping at [monitor01/smokeping/smokeping.cgi](http://monitor01/smokeping/smokeping.cgi)
+  - hmaster01 at [hmaster01:50070](http://hmaster01:50070) - active namenode
+  - hmaster02 at [hmaster02:50070](http://hmaster01:50070) - standby namenode
 
 ### Performance testing
 
@@ -136,23 +145,6 @@ Instructions on how to test the performance of your CDH4 cluster.
 Paste your public SSH RSA key in `bootstrap/ansible_rsa.pub` and run `bootstrap.sh` to bootstrap the nodes
 specified in `bootstrap/hosts`. See [`bootstrap/bootstrap.yml`](bootstrap/bootstrap.yml) for more information.
 
-### Cluster-wide SSH
-
-If you feel like using Ansible to run cluster-wide commands is overkill, take a look at
-[ClusterSSH](http://sourceforge.net/apps/mediawiki/clusterssh/index.php?title=Main_Page).
-
-To install:
-
-```sh
-apt-get install clusterssh
-```
-
-To open a SSH connection to all nodes used in this playbook:
-
-```sh
-./cssh.sh
-```
-
 ### What about Pig, Flume, etc?
 
 You can manually install additional components after running this playbook. Follow the
@@ -168,8 +160,10 @@ official [CDH4 Installation Guide](http://www.cloudera.com/content/cloudera-cont
 
 ![kibana](images/kibana.png)
 
+![smokeping](images/smokeping.png)
+
 ### License
 
 Licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
 
-Copyright 2013 [Mathias Bogaert](mailto:mathias.bogaert@gmail.com).
+Copyright 2013-2014 [Mathias Bogaert](mailto:mathias.bogaert@gmail.com).
