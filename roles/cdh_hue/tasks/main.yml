@@ -11,6 +11,7 @@
     regexp=webhdfs_url=
     line=webhdfs_url=http://{{ hostvars[groups['namenodes'][0]]['ansible_default_ipv4']['address'] }}:50070/webhdfs/v1/
     state=present
+    backrefs=yes
   notify:
     - restart hue
   tags: configuration
@@ -21,6 +22,7 @@
     regexp=hive_conf_dir=
     line=hive_conf_dir=/etc/hive/conf.{{ site_name }}/
     state=present
+    backrefs=yes
   notify:
     - restart hue
   tags: configuration
@@ -31,6 +33,7 @@
     regexp=##\ submit_to=False
     line=submit_to=True
     state=present
+    backrefs=yes
   notify:
     - restart hue
   tags: configuration
@@ -41,6 +44,7 @@
     regexp=##\ submit_to=True
     line=submit_to=False
     state=present
+    backrefs=yes
   notify:
     - restart hue
   tags: configuration
