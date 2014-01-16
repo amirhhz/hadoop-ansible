@@ -34,3 +34,18 @@
 
     - name: install python-keyczar via apt (for Ansible's Accelerated Mode)
       apt: pkg=python-keyczar
+
+    # Helpful local tasks
+    - name: Generate lines with EC2 IPs, DNS and names ready for adding to /etc/hosts (optional)
+      sudo: false
+      local_action:
+        template
+        src=./append_me_to_etc_hosts.j2
+        dest=./append_me_to_etc_hosts
+      when: ec2_ip_address is defined
+      register: new_hosts
+
+    - name: /etc/hosts append instruction (optional)
+      sudo: false
+      local_action: debug msg="cat append_me_to_etc_hosts | sudo tee -a /etc/hosts"
+      when: new_hosts.changed

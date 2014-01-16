@@ -1,0 +1,3 @@
+{% for host in groups[cluster_group] %}
+{{ hostvars[host]["ec2_ip_address"] }} {{ hostvars[host]["ec2_public_dns_name"] }} {{ hostvars[host]["ec2_tag_Name"] }}
+{% endfor %}
