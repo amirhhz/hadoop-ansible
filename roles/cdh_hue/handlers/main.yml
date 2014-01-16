@@ -1,5 +1,4 @@
 ---
 - name: restart hue
-  sudo: True
   service: name=hue state=restarted
   ignore_errors: yes
