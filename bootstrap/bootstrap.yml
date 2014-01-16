@@ -10,13 +10,18 @@
 # activity is logged, and we can specifically revoke the key (and terminate ansible's control) if either
 # (a) security is compromised or (b) we hand over control of an instance to a client.
 
-- hosts: all
+- hosts: "{{ cluster_group }}"
   sudo: true
   vars:
     - authorized_rsa_key: "{{ lookup('file', 'ansible_rsa.pub') }}"
   tasks:
-    - name: hostname should match inventory name
+    - name: hostname should match 'inventory_name' when not on EC2
       hostname: name={{ inventory_hostname }}
+      when: ec2_tag_Name is not defined
+
+    - name: hostname should match the 'name' tag when on EC2
+      hostname: name={{ ec2_tag_Name }}
+      when: ec2_tag_Name is defined
 
     - name: create user 'ansibler'
       user: name=ansibler groups=sudo shell=/bin/bash
