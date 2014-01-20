@@ -27,7 +27,7 @@
     - restart hue
   tags: configuration
 
-- name: Ensure Hue submits jobs to YARN cluster
+- name: ensure Hue submits jobs to YARN cluster
   lineinfile:
     dest=/etc/hue/conf/hue.ini
     regexp=##\ submit_to=False
@@ -38,11 +38,22 @@
     - restart hue
   tags: configuration
 
-- name: Ensure Hue does not try to submit jobs to a MRv1 cluster
+- name: ensure Hue does not try to submit jobs to a MRv1 cluster
   lineinfile:
     dest=/etc/hue/conf/hue.ini
     regexp=##\ submit_to=True
     line=submit_to=False
+    state=present
+    backrefs=yes
+  notify:
+    - restart hue
+  tags: configuration
+  
+- name: create random string for hue cookies
+  lineinfile:
+    dest=/etc/hue/conf/hue.ini
+    regexp=secret_key=
+    line=secret_key="{{ lookup('password', '/tmp/random_cookies chars=ascii,digits length=59') }}"
     state=present
     backrefs=yes
   notify:
