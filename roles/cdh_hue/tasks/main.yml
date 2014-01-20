@@ -48,7 +48,3 @@
   notify:
     - restart hue
   tags: configuration
-
-- name: Ensure hue is actually started
-  sudo_user: hue
-  service: name=hue state=started
