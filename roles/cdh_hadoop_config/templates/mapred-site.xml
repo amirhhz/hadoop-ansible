@@ -73,4 +73,10 @@
         <name>mapreduce.output.fileoutputformat.compress.type</name>
         <value>BLOCK</value>
     </property>
+    
+    <property>
+        <name>mapreduce.map.java.opts</name>
+        <value>-Xmx1024m</value>
+        <description>Higher Java heap for mapper to work.</description>
+    </property>
 </configuration>
