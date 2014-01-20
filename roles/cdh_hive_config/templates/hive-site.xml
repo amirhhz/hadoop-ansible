@@ -15,6 +15,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+<!-- {{ ansible_managed }} -->
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 
 <configuration>
