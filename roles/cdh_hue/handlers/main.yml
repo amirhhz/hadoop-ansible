@@ -1,5 +1,4 @@
 ---
 - name: restart hue
-  sudo_user: hue
   command: service hue restart
   ignore_errors: no
