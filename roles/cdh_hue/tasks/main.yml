@@ -5,57 +5,8 @@
     - hue
     - hue-server
 
-- name: set WebHDFS URL for primary NameNode in hue.ini
-  lineinfile:
-    dest=/etc/hue/conf/hue.ini
-    regexp=webhdfs_url=
-    line=webhdfs_url=http://{{ hostvars[groups['namenodes'][0]]['ansible_default_ipv4']['address'] }}:50070/webhdfs/v1/
-    state=present
-    backrefs=yes
-  notify:
-    - restart hue
-  tags: configuration
-
-- name: set hive_conf_dir in hue.ini
-  lineinfile:
-    dest=/etc/hue/conf/hue.ini
-    regexp=hive_conf_dir=
-    line=hive_conf_dir=/etc/hive/conf.{{ site_name }}/
-    state=present
-    backrefs=yes
-  notify:
-    - restart hue
-  tags: configuration
-
-- name: ensure Hue submits jobs to YARN cluster
-  lineinfile:
-    dest=/etc/hue/conf/hue.ini
-    regexp=##\ submit_to=False
-    line=submit_to=True
-    state=present
-    backrefs=yes
-  notify:
-    - restart hue
-  tags: configuration
-
-- name: ensure Hue does not try to submit jobs to a MRv1 cluster
-  lineinfile:
-    dest=/etc/hue/conf/hue.ini
-    regexp=##\ submit_to=True
-    line=submit_to=False
-    state=present
-    backrefs=yes
-  notify:
-    - restart hue
-  tags: configuration
-  
-- name: create random string for hue cookies
-  lineinfile:
-    dest=/etc/hue/conf/hue.ini
-    regexp=secret_key=
-    line=secret_key="{{ lookup('password', '/tmp/random_cookies chars=ascii,digits length=59') }}"
-    state=present
-    backrefs=yes
+- name: Use hue.ini file with correct properties
+  template: dest=/etc/hue/conf/hue.ini src=hue.ini
   notify:
     - restart hue
   tags: configuration
