@@ -25,7 +25,7 @@ hslave[01:03]
 datanodes
 
 [historyserver]
-hslave01
+hmaster01
 
 [hue_server]
 hmaster01
