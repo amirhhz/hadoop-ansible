@@ -30,6 +30,12 @@ hmaster01
 [hue_server]
 hmaster01
 
+[oozie_server]
+hmaster01
+
+[oozie_metastore]
+hmaster02
+
 # HBase Nodes
 # ===========
 

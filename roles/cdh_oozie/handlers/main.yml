@@ -1,0 +1,4 @@
+---  
+- name: restart oozie
+  service: name=oozie state=restarted
+  ignore_errors: no

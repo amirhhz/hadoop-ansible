@@ -14,6 +14,15 @@
         <name>hadoop.proxyuser.hue.groups</name>
         <value>*</value>
     </property>
+    
+    <property>
+      <name>hadoop.proxyuser.oozie.hosts</name>
+      <value>*</value>
+    </property>
+    <property>
+       <name>hadoop.proxyuser.oozie.groups</name>
+       <value>*</value>
+    </property>
 
     <property>
         <name>hadoop.proxyuser.httpfs.hosts</name>
@@ -41,5 +50,6 @@
         <value>org.apache.hadoop.io.compress.DefaultCodec,org.apache.hadoop.io.compress.GzipCodec,org.apache.hadoop.io.compress.BZip2Codec,org.apache.hadoop.io.compress.SnappyCodec</value>
         <final>true</final>
     </property>
+
 
 </configuration>

@@ -247,7 +247,7 @@
   roles:
     - cdh_hbase_regionserver
 
-- hosts: hive_metastore
+- hosts: hive_metastore:oozie_metastore
   accelerate: "{{ accelerate }}"
   user: ansibler
   sudo: true
@@ -313,6 +313,23 @@
       tags:
         - hive
 
+- hosts: oozie_metastore
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - cdh_oozie_metastore
+  tags:
+    - oozie
+
+- hosts: oozie_server
+  user: ansibler
+  sudo: true
+  roles:
+    - cdh_oozie
+  tags:
+    - oozie
+    
 - hosts: hue_server
   user: ansibler
   sudo: true
