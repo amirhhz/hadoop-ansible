@@ -56,10 +56,6 @@
         <name>yarn.nodemanager.remote-app-log-dir</name>
         <value>/var/log/hadoop-yarn/apps</value>
     </property>
-    <property>
-        <name>yarn.app.mapreduce.am.staging-dir</name>
-        <value>/user</value>
-    </property>
 
     <!-- Fair scheduling is a method of assigning resources to jobs such that all jobs get, on average, an equal
     share of resources over time. When there is a single job running, that job uses the entire cluster. -->

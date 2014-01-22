@@ -5,6 +5,12 @@
 
 <configuration>
     <property>
+        <name>yarn.app.mapreduce.am.staging-dir</name>
+        <value>/user</value>
+        <description>Needed by job history server to derive directories for history file location.</description>
+    </property>
+
+    <property>
         <name>mapreduce.framework.name</name>
         <value>yarn</value>
     </property>
