@@ -21,7 +21,7 @@
 
     <property>
         <name>yarn.web-proxy.address</name>
-        <value>{{ hostvars[groups['historyserver'][0]]['ansible_hostname'] }}:8088</value>
+        <value>{{ hostvars[groups['resourcemanager'][0]]['ansible_hostname'] }}:8088</value>
     </property>
 
     <property>
