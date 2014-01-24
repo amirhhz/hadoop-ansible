@@ -23,6 +23,7 @@
     - restart hadoop-hdfs-namenode
     - restart hadoop-hdfs-journalnode
     - restart hadoop-hdfs-datanode
+    - restart hadoop-mapreduce-historyserver
   tags:
     - hadoop
     - configuration

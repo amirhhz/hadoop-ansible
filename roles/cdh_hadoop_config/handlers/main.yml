@@ -12,3 +12,7 @@
 - name: restart hadoop-hdfs-journalnode
   service: name=hadoop-hdfs-journalnode state=restarted
   ignore_errors: yes
+
+- name: restart hadoop-mapreduce-historyserver
+  service: name=hadoop-mapreduce-historyserver state=restarted
+  ignore_errors: yes
