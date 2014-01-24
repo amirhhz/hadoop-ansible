@@ -312,6 +312,10 @@
       shell: creates=/data/dfs/.hivewarehousedirchmodded sleep 5 && hadoop fs -chmod -R 1777 /user/hive/warehouse && touch /data/dfs/.hivewarehousedirchmodded
       tags:
         - hive
+    - name: make sure the /user/hive directory has the correct owner
+      shell: creates=/data/dfs/.hivedirchowned sleep 5 && hadoop fs -chown -R hive:hive /user/hive && touch /data/dfs/.hivedirchowned
+      tags:
+        - hadoop
 
 - hosts: oozie_metastore
   accelerate: "{{ accelerate }}"
