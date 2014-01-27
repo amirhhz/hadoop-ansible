@@ -16,3 +16,7 @@
 - name: restart hadoop-mapreduce-historyserver
   service: name=hadoop-mapreduce-historyserver state=restarted
   ignore_errors: yes
+
+- name: restart hadoop-yarn-nodemanager
+  service: name=hadoop-yarn-nodemanager state=restarted
+  ignore_errors: yes
