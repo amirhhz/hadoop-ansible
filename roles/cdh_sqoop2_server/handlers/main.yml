@@ -1,0 +1,4 @@
+---
+- name: restart sqoop2
+  command: service sqoop2-server restart
+  ignore_errors: no

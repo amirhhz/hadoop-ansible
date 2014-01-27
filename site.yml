@@ -334,6 +334,22 @@
   tags:
     - oozie
     
+- hosts: sqoop2_server
+  user: ansibler
+  sudo: true
+  roles:
+    - cdh_sqoop2_server
+  tags:
+    - sqoop2
+
+- hosts: sqoop2_clients
+  user: ansibler
+  sudo: true
+  roles:
+    - cdh_sqoop2_client
+  tags:
+    - sqoop2
+
 - hosts: hue_server
   user: ansibler
   sudo: true

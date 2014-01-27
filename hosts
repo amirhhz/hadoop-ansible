@@ -51,6 +51,12 @@ monitor01
 [monitors]
 monitor01
 
+[sqoop2_server]
+hslave02
+
+[sqoop2_clients:children]
+hue_server
+
 # Hive Nodes
 # ==========
 

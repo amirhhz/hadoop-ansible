@@ -1,0 +1,31 @@
+---
+# file: roles/cdh_sqoop2_server/tasks/main.yml
+
+- name: install Sqoop2 server
+  apt: name=sqoop2-server update_cache=yes
+  tags:
+    - sqoop2
+
+- name: unpack mysql JDBC connector
+  unarchive: dest=/var/lib/sqoop2 src=mysql-connector-java-5.1.28.zip
+  tags:
+    - sqoop2
+
+- name: change ownership of mysql JDBC connector
+  file: path=/var/lib/sqoop2/mysql-connector-java-5.1.28 recurse=yes owner=sqoop2 group=sqoop
+  tags:
+    - sqoop2
+
+- name: link mysql JDBC connector
+  file: state=link dest=/var/lib/sqoop2/mysql-connector-java-5.1.28-bin.jar src=/var/lib/sqoop2/mysql-connector-java-5.1.28/mysql-connector-java-5.1.28-bin.jar owner=sqoop2 group=sqoop mode=664
+  notify:
+    - restart sqoop2
+  tags:
+    - sqoop2
+
+- name: use sqoop2-server configuration with YARN
+  template: dest=/etc/default/sqoop2-server src=sqoop2-server
+  notify:
+    - restart sqoop2
+  tags:
+    - configuration
