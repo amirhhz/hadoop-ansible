@@ -51,6 +51,9 @@ monitor01
 [monitors]
 monitor01
 
+[sqoop:children]
+hue_server
+
 [sqoop2_server]
 hslave02
 

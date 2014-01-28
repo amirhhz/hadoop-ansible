@@ -1,0 +1,22 @@
+---
+# file: roles/cdh_sqoop/tasks/main.yml
+
+- name: install sqoop
+  apt: name=sqoop update_cache=yes
+  tags:
+    - sqoop
+
+- name: unpack mysql JDBC connector
+  unarchive: dest=/usr/lib/sqoop/lib/ src=mysql-connector-java-5.1.28.zip
+  tags:
+    - sqoop
+
+- name: change ownership of mysql JDBC connector
+  file: path=/usr/lib/sqoop/lib/mysql-connector-java-5.1.28 recurse=yes owner=sqoop group=sqoop
+  tags:
+    - sqoop
+
+- name: link mysql JDBC connector
+  file: state=link dest=/usr/lib/sqoop/lib/mysql-connector-java-5.1.28-bin.jar src=/usr/lib/sqoop/lib/mysql-connector-java-5.1.28/mysql-connector-java-5.1.28-bin.jar owner=sqoop group=sqoop mode=664
+  tags:
+    - sqoop

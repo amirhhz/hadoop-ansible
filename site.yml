@@ -333,7 +333,16 @@
     - cdh_oozie
   tags:
     - oozie
-    
+
+- hosts: sqoop
+  user: ansibler
+  sudo: true
+  roles:
+    - cdh_sqoop
+  tags:
+    - sqoop
+
+
 - hosts: sqoop2_server
   user: ansibler
   sudo: true
