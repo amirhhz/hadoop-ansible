@@ -1,4 +1,4 @@
 ---
 - name: restart sqoop2
-  command: service sqoop2-server restart
+  service: name=sqoop2-server state=restarted
   ignore_errors: no
