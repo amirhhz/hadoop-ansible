@@ -29,3 +29,4 @@
     - restart sqoop2
   tags:
     - configuration
+    - sqoop2
