@@ -35,6 +35,20 @@
     - name: install python-keyczar via apt (for Ansible's Accelerated Mode)
       apt: pkg=python-keyczar
 
+    - name: unmount default /mnt on EC2
+      when: ec2_tag_Name is defined
+      mount: name=/mnt src=/dev/xvdb fstype=auto state=absent
+
+    - name: find ephemeral devices attached by EC2 (/dev/xvd?)
+      when: ec2_tag_Name is defined
+      shell: ls /dev/xvd?
+      register: devices
+
+    - name: mount ephemeral drives on EC2
+      when: ec2_tag_Name is defined
+      mount: name=/data/{{ item.0 }} src={{ item.1 }} fstype=auto opts=defaults,noatime,nobootwait state=mounted passno=2
+      with_indexed_items: devices.stdout_lines
+
     # Helpful local tasks
     - name: Generate lines with EC2 IPs, DNS and names ready for adding to /etc/hosts (optional)
       sudo: false
