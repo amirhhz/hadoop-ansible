@@ -10,5 +10,5 @@
   tags: hadoop
 
 - name: install hadoop-yarn-nodemanager via apt
-  apt: name=hadoop-yarn-nodemanager
+  apt: pkg=hadoop-yarn-nodemanager={{ cdh_hadoop_version }}
   tags: hadoop

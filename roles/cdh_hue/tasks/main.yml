@@ -2,8 +2,8 @@
 - name: install hue meta-package and hue server
   apt: pkg={{ item }}
   with_items:
-    - hue
-    - hue-server
+    - hue={{ cdh_hue_version }}
+    - hue-server={{ cdh_hue_version }}
 
 - name: Use hue.ini file with correct properties
   template: dest=/etc/hue/conf/hue.ini src=hue.ini

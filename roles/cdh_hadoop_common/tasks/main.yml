@@ -2,12 +2,12 @@
 # file: roles/cdh_hadoop_common/tasks/main.yml
 
 - name: install base Hadoop packages via apt
-  apt: name={{ item }} update_cache=yes
+  apt: pkg={{ item }} update_cache=yes
   with_items:
-    - hadoop
-    - hadoop-hdfs
-    - hadoop-lzo-cdh4
-    - hadoop-yarn
+    - hadoop={{ cdh_hadoop_version }}
+    - hadoop-hdfs={{ cdh_hadoop_version }}
+    - hadoop-lzo-cdh4=0.4.15-1.gplextras.p0.152~precise-gplextras4.3.0
+    - hadoop-yarn={{ cdh_hadoop_version }}
   tags: hadoop
 
 - name: create the /data directory

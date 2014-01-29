@@ -8,7 +8,7 @@
   tags: hadoop
 
 - name: install hadoop-hdfs-journalnode via apt
-  apt: name=hadoop-hdfs-journalnode
+  apt: pkg=hadoop-hdfs-journalnode={{ cdh_hadoop_version }}
   tags: hadoop
 
 - name: configure rsyslog for hadoop-hdfs-journalnode

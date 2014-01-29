@@ -8,7 +8,7 @@
     - restart rsyslog
 
 - name: install hbase-regionserver via apt
-  apt: name=hbase-regionserver
+  apt: pkg=hbase-regionserver={{ cdh_hbase_version }}
   tags: hbase
   notify:
     - start hbase-regionserver

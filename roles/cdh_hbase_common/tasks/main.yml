@@ -2,5 +2,5 @@
 # file: roles/cdh_hbase_common/tasks/main.yml
 
 - name: install base HBase package via apt
-  apt: name=hbase update_cache=yes
+  apt: pkg=hbase={{ cdh_hbase_version }} update_cache=yes
   tags: hbase

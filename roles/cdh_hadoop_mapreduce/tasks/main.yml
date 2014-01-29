@@ -1,5 +1,5 @@
 ---
 
 - name: install hadoop-mapreduce via apt
-  apt: name=hadoop-mapreduce
+  apt: pkg=hadoop-mapreduce={{ cdh_hadoop_version }}
   tags: hadoop

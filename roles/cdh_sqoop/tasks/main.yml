@@ -2,7 +2,7 @@
 # file: roles/cdh_sqoop/tasks/main.yml
 
 - name: install sqoop
-  apt: name=sqoop update_cache=yes
+  apt: pkg=sqoop={{ cdh_sqoop_version }} update_cache=yes
   tags:
     - sqoop
 

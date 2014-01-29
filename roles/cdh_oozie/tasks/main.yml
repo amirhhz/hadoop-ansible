@@ -1,6 +1,6 @@
 ---
 - name: install oozie now
-  apt: pkg={{ item }}
+  apt: pkg={{ item }}={{ cdh_oozie_version }}
   with_items:
     - oozie
   notify:

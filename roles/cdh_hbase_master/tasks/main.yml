@@ -8,7 +8,7 @@
     - restart rsyslog
 
 - name: install hbase-master via apt
-  apt: name=hbase-master
+  apt: pkg=hbase-master={{ cdh_hbase_version }}
   tags: hbase
   notify:
     - start hbase-master

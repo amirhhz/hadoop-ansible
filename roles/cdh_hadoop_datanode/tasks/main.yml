@@ -6,7 +6,7 @@
   tags: hadoop
 
 - name: install hadoop-hdfs-datanode via apt
-  apt: name=hadoop-hdfs-datanode
+  apt: pkg=hadoop-hdfs-datanode={{ cdh_hadoop_version }}
   tags: hadoop
 
 - name: configure rsyslog for hadoop-hdfs-datanode

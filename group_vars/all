@@ -9,3 +9,15 @@ mtu: 9216
 # postfix_domain: example.com
 # mandrill_username: your_username
 # mandrill_api_key: your_api_key
+
+
+cdh_repository_version: precise-cdh4.5.0
+cdh_gplextra_repository: precise-gplextras4.3.0
+cdh_hadoop_version: 2.0.0+1518-1.cdh4.5.0.p0.24~precise-cdh4.5.0
+cdh_zookeeper_version: 3.4.5+24-1.cdh4.5.0.p0.23~precise-cdh4.5.0
+cdh_hbase_version: 0.94.6+165-1.cdh4.5.0.p0.21~precise-cdh4.5.0
+cdh_hive_version: 0.10.0+214-1.cdh4.5.0.p0.25~precise-cdh4.5.0
+cdh_sqoop_version: 1.4.3+81-1.cdh4.5.0.p0.16~precise-cdh4.5.0
+cdh_sqoop2_version: 1.99.2+98-1.cdh4.5.0.p0.19~precise-cdh4.5.0
+cdh_oozie_version: 3.3.2+97-1.cdh4.5.0.p0.19~precise-cdh4.5.0
+cdh_hue_version: 2.5.0+182-1.cdh4.5.0.p0.26~precise-cdh4.5.0
