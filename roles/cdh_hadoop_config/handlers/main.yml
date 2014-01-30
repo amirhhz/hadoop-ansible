@@ -20,3 +20,7 @@
 - name: restart hadoop-yarn-nodemanager
   service: name=hadoop-yarn-nodemanager state=restarted
   ignore_errors: yes
+
+- name: restart hadoop-yarn-resourcemanager
+  service: name=hadoop-yarn-resourcemanager state=restarted
+  ignore_errors: yes
