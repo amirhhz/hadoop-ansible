@@ -4,6 +4,15 @@
 <!-- {{ ansible_managed }} -->
 
 <configuration>
+    {% set datadirs_used = [] %}
+    {% for mount in ansible_mounts if "/data/volume" in mount.mount %}{% if datadirs_used.append(mount.mount) %}{% endif %}{% endfor %}
+
+    <!-- HDFS local data locations -->
+    <property>
+        <name>dfs.datanode.data.dir</name>
+        <value>{% if datadirs_used %}{{ datadirs_used|join(',') }}{% else %}/data/dfs/dn{% endif %}</value>
+    </property>
+
     <!-- common server name -->
     <property>
         <name>dfs.nameservices</name>
@@ -84,11 +93,6 @@
     <property>
         <name>dfs.name.dir</name>
         <value>file:///data/dfs/nn</value>
-    </property>
-
-    <property>
-        <name>dfs.data.dir</name>
-        <value>file:///data/dfs/dn</value>
     </property>
 
     <property>

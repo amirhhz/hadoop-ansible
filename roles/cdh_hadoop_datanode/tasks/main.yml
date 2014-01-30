@@ -1,9 +1,25 @@
 ---
 # file: roles/cdh_hadoop_datanode/tasks/main.yml
 
+- name: find data volumes mounted on EC2
+  ignore_errors: yes
+  shell: find /data -maxdepth 1 -type d -name 'volume*'
+  register: data_volumes
+  tags:
+    - hadoop
+
 - name: create the /data/dfs/dn directory
-  file: path=/data/dfs/dn owner=hdfs group=hdfs state=directory
-  tags: hadoop
+  when: data_volumes|failed
+  file: path=/data/dfs/dn owner=hdfs group=hdfs state=directory mode=0755
+  tags:
+    - hadoop
+
+- name: chown volumes to hdfs:hdfs on EC2
+  when: data_volumes|success
+  file: path=/data/volume{{ item.0 }} owner=hdfs group=hdfs state=directory mode=0755
+  with_indexed_items: data_volumes.stdout_lines
+  tags:
+    - hadoop
 
 - name: install hadoop-hdfs-datanode via apt
   apt: pkg=hadoop-hdfs-datanode={{ cdh_hadoop_version }}
