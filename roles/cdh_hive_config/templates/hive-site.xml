@@ -19,6 +19,7 @@
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 
 <configuration>
+    {% include 'aws_keys.xml' ignore missing %}
 
     <property>
         <!-- Workaround for bug with Hive and S3 with CombineHiveInputFormat -->
