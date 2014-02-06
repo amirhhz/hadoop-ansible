@@ -1,0 +1,19 @@
+---
+# Site Configuration
+# ==================
+# Focused on Hive & Hue
+# (no Presto, HBase, or monitoring)
+
+- include: prerequisists.yml
+
+- include: hadoop.yml
+
+- include: hive.yml
+
+- include: oozie.yml
+
+- include: sqoop.yml
+
+- include: sqoop2.yml
+
+- include: hue.yml

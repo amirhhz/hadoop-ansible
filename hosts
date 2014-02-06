@@ -46,10 +46,10 @@ namenodes
 datanodes
 
 [elasticsearch]
-monitor01
+# monitor01
 
 [monitors]
-monitor01
+# monitor01
 
 [sqoop:children]
 hue_server
@@ -69,12 +69,12 @@ hmaster02
 # Presto Nodes
 # ============
 
-# [presto_coordinators]
-# hmaster02
+[presto_coordinators]
+hmaster02
 
-# [presto_workers]
-# hslave03
-# hslave04
+[presto_workers]
+hslave03
+hslave02
 
 # Groups
 # ======
