@@ -1,0 +1,7 @@
+- hosts: sqoop
+  user: ansibler
+  sudo: true
+  roles:
+    - cdh_sqoop
+  tags:
+    - sqoop

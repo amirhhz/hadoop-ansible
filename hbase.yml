@@ -1,0 +1,35 @@
+- hosts: hbase_masters:regionservers
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - cdh_hbase_config
+
+- hosts: namenodes[0]
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  sudo_user: hdfs
+  tasks:
+    - name: hdfs:///hbase directory exists
+      shell: creates=/data/dfs/.hbasedircreated hadoop fs -mkdir /hbase && touch /data/dfs/.hbasedircreated
+      tags:
+        - hbase
+    - name: hdfs:///hbase directory owned by hbase:hbase
+      shell: creates=/data/dfs/.hbasedirchowned sleep 5 && hadoop fs -chown hbase:hbase /hbase && touch /data/dfs/.hbasedirchowned
+      tags:
+        - hbase
+
+- hosts: hbase_masters
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - cdh_hbase_master
+
+- hosts: regionservers
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - cdh_hbase_regionserver

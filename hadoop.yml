@@ -1,0 +1,136 @@
+---
+
+- hosts: zookeepers:journalnodes:resourcemanager:nodemanagers:historyserver:hbase_masters:regionservers
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - cdh_common
+    - cdh_hadoop_config
+
+- hosts: zookeepers
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - cdh_zookeeper_server
+
+- hosts: journalnodes
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - cdh_hadoop_journalnode
+
+- hosts: namenodes[0]
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  sudo_user: hdfs
+  tasks:
+    - name: create the /data/dfs/nn directory
+      file: path=/data/dfs/nn owner=hdfs group=hdfs state=directory
+      tags:
+        - hadoop
+        - hbase
+    - name: format the namenode - WILL NOT FORMAT IF /data/dfs/nn/current/VERSION EXISTS TO AVOID DATA LOSS
+      shell: creates=/data/dfs/nn/current/VERSION hdfs namenode -format -force
+
+- hosts: namenodes[0]
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - cdh_hadoop_namenode
+
+- hosts: namenodes
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - cdh_hadoop_zkfc
+
+- hosts: namenodes[0]
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  tasks:
+    - name: format hadoop-hdfs-zkfc
+      shell: creates=/data/dfs/.zkfsformatted hdfs zkfc -formatZK -force && touch /data/dfs/.zkfsformatted
+    - name: start zkfc
+      service: name=hadoop-hdfs-zkfc state=restarted
+    - name: restart namenode
+      service: name=hadoop-hdfs-namenode state=restarted
+
+- hosts: namenodes[1]
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  sudo_user: hdfs
+  tasks:
+    - name: wait for the first namenode to come online
+      wait_for: host={{ hostvars[groups['namenodes'][0]]['ansible_default_ipv4']['address'] }} port=50070
+    - name: create the /data/dfs/nn directory
+      file: path=/data/dfs/nn owner=hdfs group=hdfs state=directory
+    - name: bootstrap the standby namenode
+      shell: creates=/data/dfs/nn/.bootstrapped hdfs namenode -bootstrapStandby && touch /data/dfs/nn/.bootstrapped
+
+- hosts: namenodes[1]
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - cdh_hadoop_namenode
+
+- hosts: datanodes
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - cdh_hadoop_datanode
+
+- hosts: nodemanagers
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - cdh_hadoop_mapreduce
+
+- hosts: namenodes[0]
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  sudo_user: hdfs
+  tasks:
+    - name: create /tmp directory on the cluster
+      shell: creates=/data/dfs/.tmpdircreated hadoop fs -mkdir /tmp && touch /data/dfs/.tmpdircreated
+    - name: make sure the /tmp directory has the correct permissions
+      shell: creates=/data/dfs/.tmpdirchowned sleep 5 && hadoop fs -chmod -R 1777 /tmp && touch /data/dfs/.tmpdirchowned
+    - name: create a /user/history directory on the cluster
+      shell: creates=/data/dfs/.historydircreated hadoop fs -mkdir /user/history && touch /data/dfs/.historydircreated
+    - name: make sure the /user/history directory has the correct permissions
+      shell: creates=/data/dfs/.historydirchmodded sleep 5 && hadoop fs -chmod -R 1777 /user/history && touch /data/dfs/.historydirchmodded
+    - name: make sure the /user/history directory has the correct owner
+      shell: creates=/data/dfs/.historydirchowned sleep 5 && hadoop fs -chown yarn:mapred /user/history && touch /data/dfs/.historydirchowned
+
+- hosts: resourcemanager
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - cdh_hadoop_yarn_resourcemanager
+
+- hosts: nodemanagers
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - cdh_hadoop_yarn_nodemanager
+
+- hosts: historyserver
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - cdh_hadoop_mapreduce_historyserver
+    - cdh_hadoop_yarn_proxyserver

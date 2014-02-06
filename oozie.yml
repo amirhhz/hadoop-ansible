@@ -1,0 +1,23 @@
+- hosts: oozie_metastore
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - postgresql_server
+
+- hosts: oozie_metastore
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - cdh_oozie_metastore
+  tags:
+    - oozie
+
+- hosts: oozie_server
+  user: ansibler
+  sudo: true
+  roles:
+    - cdh_oozie
+  tags:
+    - oozie

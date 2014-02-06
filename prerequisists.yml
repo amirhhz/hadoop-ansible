@@ -1,0 +1,14 @@
+- hosts: all
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - common
+    - {role: oracle_jdk, when: jdk_installed is not defined }
+
+- hosts: 2_links_aggregated
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - { role: 2_aggregated_links, when: bond_mode is defined and mtu is defined and ansible_virtualization_role == "host" and ansible_interfaces|length == 3 and "bond0" not in ansible_interfaces }

@@ -1,0 +1,7 @@
+- hosts: hue_server
+  user: ansibler
+  sudo: true
+  roles:
+    - cdh_hue
+  tags:
+    - hue

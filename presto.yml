@@ -1,0 +1,13 @@
+- hosts: presto_coordinators
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - presto_coordinator
+
+- hosts: presto_workers
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - presto_worker

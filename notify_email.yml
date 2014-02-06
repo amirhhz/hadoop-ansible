@@ -1,0 +1,8 @@
+---
+
+- hosts: all
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - { role: postfix_mandrill, when: notify_email is defined and postfix_domain is defined and mandrill_username is defined and mandrill_api_key is defined }

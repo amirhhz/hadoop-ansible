@@ -1,0 +1,34 @@
+---
+
+- hosts: all
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - ganglia_monitor
+
+- hosts: elasticsearch
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - elasticsearch
+
+- hosts: monitors[0]
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - ganglia_metad
+    - ganglia_web
+    - logstash_index_cleaner
+    - kibana
+    - smokeping
+
+- hosts: all
+  accelerate: "{{ accelerate }}"
+  user: ansibler
+  sudo: true
+  roles:
+    - td_agent
+    - rsyslog_fluentd
