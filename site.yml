@@ -3,7 +3,7 @@
 # ==================
 # All services
 
-- include: prerequisists.yml
+- include: prerequisites.yml
 
 - include: notify_email.yml
 

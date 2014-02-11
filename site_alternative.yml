@@ -4,7 +4,7 @@
 # Focused on Hive & Hue
 # (no Presto, HBase, or monitoring)
 
-- include: prerequisists.yml
+- include: prerequisites.yml
 
 - include: hadoop.yml
 
