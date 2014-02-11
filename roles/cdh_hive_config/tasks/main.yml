@@ -13,6 +13,7 @@
     - hive-site.xml
   notify:
     - restart hive-metastore
+    - restart hive-server2
   tags:
     - hive
     - hue

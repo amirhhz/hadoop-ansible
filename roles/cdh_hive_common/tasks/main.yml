@@ -4,5 +4,4 @@
 - name: install base Hive package via apt
   apt: pkg=hive={{ cdh_hive_version }} update_cache=yes
   tags:
-    - postgres
     - hive

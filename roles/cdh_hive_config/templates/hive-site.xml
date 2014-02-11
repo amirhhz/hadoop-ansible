@@ -21,6 +21,24 @@
 <configuration>
     {% include 'custom.xml' ignore missing %}
 
+    <!-- Hive table locking has to be enabled and configured for HiveServer2 -->
+    <property>
+        <name>hive.support.concurrency</name>
+        <description>Enable Hive's Table Lock Manager Service</description>
+        <value>true</value>
+    </property>
+    <property>
+        <name>hive.zookeeper.quorum</name>
+        <description>Zookeeper quorum used by Hive's Table Lock Manager</description>
+        <value>{% for host in groups['zookeepers'] %}{{ host }}{% if not loop.last %},{% endif %}{% endfor %}</value>
+    </property>
+
+    <property>
+        <name>hive.server2.enable.doAs</name>
+        <value>true</value>
+    </property>
+
+
     <property>
         <!-- Workaround for bug with Hive and S3 with CombineHiveInputFormat -->
         <name>hive.input.format</name>

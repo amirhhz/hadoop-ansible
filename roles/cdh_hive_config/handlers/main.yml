@@ -4,3 +4,7 @@
 - name: restart hive-metastore
   service: name=hive-metastore state=restarted
   ignore_errors: yes
+
+- name: restart hive-server2
+  service: name=hive-server2 state=restarted
+  ignore_errors: yes
