@@ -12,4 +12,4 @@ fi
 export ANSIBLE_HOST_KEY_CHECKING=False
 
 cd `dirname $0`  # to ensure ansible.cfg is picked up and relative paths are correct
-ansible-playbook -v -i ../ec2.py -u ubuntu bootstrap.yml --extra-vars "cluster_group=$1"
+ansible-playbook -v -i ../ec2_hosts -u ubuntu bootstrap.yml --extra-vars "cluster_group=$1"
