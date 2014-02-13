@@ -14,14 +14,43 @@
   sudo: true
   vars:
     - authorized_rsa_key: "{{ lookup('file', 'ansible_rsa.pub') }}"
+    - dns_zone: "rangespan.com"
+    - cluster_subdomain: "cdh"
+    - dns_ttl: 300  # in seconds
+
   tasks:
     - name: hostname should match 'inventory_name' when not on EC2
       hostname: name={{ inventory_hostname }}
       when: ec2_tag_Name is not defined
 
-    - name: hostname should match the 'name' tag when on EC2
-      hostname: name={{ ec2_tag_Name }}
+    - name: hostname and FQDN should match the 'name' tag when on EC2
+      hostname: name={{ ec2_tag_Name }}.{{ cluster_subdomain }}.{{ dns_zone }}
       when: ec2_tag_Name is defined
+      register: host_fqdn
+
+    - name: keep Route53 DNS records in sync with FQDN of EC2 hosts
+      sudo: false
+      local_action:
+        route53
+        command=create
+        overwrite=no
+        type=CNAME
+        zone={{ dns_zone }}
+        record={{ host_fqdn.name }}
+        value={{ ec2_public_dns_name }}
+        ttl={{ dns_ttl }}
+      when: host_fqdn is defined
+
+    - name: force gathering of facts again DNS entries changed
+      action: setup
+      when: host_fqdn is defined
+
+    - name: ensure FQDN is in /etc/hosts so it is picked up
+      lineinfile:
+        dest: /etc/hosts
+        state: present
+        regexp: "^{{ ansible_default_ipv4.address }}"
+        line: "{{ ansible_default_ipv4.address }} {{ host_fqdn.name }} {{ ansible_hostname }}"
 
     - name: create user 'ansibler'
       user: name=ansibler groups=sudo shell=/bin/bash
