@@ -5,7 +5,7 @@
     - oozie
   notify:
     - restart oozie
-    
+
 - name: configure oozie in /etc/oozie/conf.dist/oozie-site.xml
   template: src=oozie-site.xml dest=/etc/oozie/conf.dist/oozie-site.xml owner=root group=root mode=0644
   notify:
@@ -13,7 +13,7 @@
   tags:
     - oozie
     - configuration
-    
+
 - name: configure Oozie to use YARN
   lineinfile:
     dest=/etc/oozie/conf/oozie-env.sh
@@ -24,7 +24,7 @@
   notify:
     - restart oozie
   tags: configuration
-  
+
 - name: create oozie DB schema
   sudo_user: oozie
   command: /usr/lib/oozie/bin/ooziedb.sh create -run
@@ -41,18 +41,18 @@
   command: hadoop fs -mkdir  -p /user/oozie
   tags:
     - oozie
-    
+
 - name: chown oozie user directory on HDFS
   sudo_user: hdfs
   command: hadoop fs -chown oozie:oozie /user/oozie
   tags:
     - oozie
-    
+
 - name: make tmp dir for oozie shared libs
   command: mkdir -p /tmp/ooziesharelib creates=/tmp/ooziesharelib
   tags:
     - oozie
-    
+
 - name: decompress oozie shared libs to tmp dir
   command: tar xzf /usr/lib/oozie/oozie-sharelib-yarn.tar.gz chdir=/tmp/ooziesharelib
   tags:
