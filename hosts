@@ -19,7 +19,7 @@ hslave01
 hmaster01
 
 [datanodes]
-hslave[01:03]
+hslave[01:04]
 
 [nodemanagers:children]
 datanodes
