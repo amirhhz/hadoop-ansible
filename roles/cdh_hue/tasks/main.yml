@@ -4,9 +4,10 @@
   with_items:
     - hue={{ cdh_hue_version }}
     - hue-server={{ cdh_hue_version }}
+  tags: hue
 
 - name: Use hue.ini file with correct properties
   template: dest=/etc/hue/conf/hue.ini src=hue.ini
   notify:
     - restart hue
-  tags: configuration
+  tags: hue
