@@ -41,7 +41,7 @@
         ttl={{ dns_ttl }}
       when: host_fqdn is defined
 
-    - name: force gathering of facts again DNS entries changed
+    - name: force gathering of facts again when there is a potential FQDN change
       action: setup
       when: host_fqdn is defined
 
