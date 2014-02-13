@@ -4,6 +4,7 @@
 <!-- {{ ansible_managed }} -->
 
 <configuration>
+    {% include 'custom.xml' ignore missing %}
 
     <property>
       <name>hadoop.proxyuser.hive.hosts</name>
