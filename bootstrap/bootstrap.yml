@@ -50,6 +50,7 @@
         state: present
         regexp: "^{{ ansible_default_ipv4.address }}"
         line: "{{ ansible_default_ipv4.address }} {{ host_fqdn.name }} {{ ansible_hostname }}"
+      when: host_fqdn is defined
 
     - name: create user 'ansibler'
       user: name=ansibler groups=sudo shell=/bin/bash
