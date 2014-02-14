@@ -14,9 +14,8 @@
   sudo: true
   vars:
     - authorized_rsa_key: "{{ lookup('file', 'ansible_rsa.pub') }}"
-    - dns_zone: "rangespan.com"
-    - cluster_subdomain: "cdh"
-    - dns_ttl: 300  # in seconds
+  vars_files:
+    - dns_vars.yml # make sure you have renamed and customised the example vars file
 
   tasks:
     - name: hostname should match 'inventory_name' when not on EC2

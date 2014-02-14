@@ -1,0 +1,6 @@
+---
+# Used when setting DNS records on route53 with the scheme:
+# {{ ec2 instance name }}.{{ cluster_subdomain }}.{{ dns_zone }}
+dns_zone: example.com
+cluster_subdomain: cdh
+dns_ttl: 300  # in seconds
