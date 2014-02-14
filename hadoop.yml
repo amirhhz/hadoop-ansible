@@ -1,5 +1,4 @@
 ---
-
 - hosts: zookeepers:journalnodes:resourcemanager:nodemanagers:historyserver:hbase_masters:regionservers
   accelerate: "{{ accelerate }}"
   user: ansibler

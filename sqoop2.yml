@@ -1,4 +1,4 @@
-
+---
 - hosts: sqoop2_server
   user: ansibler
   sudo: true

@@ -1,3 +1,4 @@
+---
 - hosts: presto_coordinators
   accelerate: "{{ accelerate }}"
   user: ansibler

@@ -1,3 +1,4 @@
+---
 - hosts: oozie_metastore
   accelerate: "{{ accelerate }}"
   user: ansibler
