@@ -144,7 +144,7 @@
 
     <property>
         <name>oozie.service.JPAService.jdbc.url</name>
-        <value>jdbc:postgresql://{{ hostvars[groups["oozie_metastore"][0]]["ansible_hostname"] }}:5432/oozie</value>
+        <value>jdbc:postgresql://{{ hostvars[groups["oozie_metastore"][0]]["ansible_fqdn"] }}:5432/oozie</value>
         <description>
             JDBC URL.
         </description>
