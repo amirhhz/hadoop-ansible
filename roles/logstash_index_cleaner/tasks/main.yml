@@ -6,7 +6,7 @@
   tags: logstash_index_cleaner
 
 - name: clone the expire-logs repo to /var/lib/logstash-index-cleaner
-  git: repo=https://github.com/logstash/expire-logs.git dest=/var/lib/logstash-index-cleaner update=true
+  git: repo=https://github.com/logstash/expire-logs.git dest=/var/lib/logstash-index-cleaner update=true version=0.5.1
   tags: logstash_index_cleaner
 
 - name: pip install -r requirements.txt
