@@ -20,3 +20,8 @@
   file: state=link dest=/usr/lib/sqoop/lib/mysql-connector-java-5.1.28-bin.jar src=/usr/lib/sqoop/lib/mysql-connector-java-5.1.28/mysql-connector-java-5.1.28-bin.jar owner=sqoop group=sqoop mode=664
   tags:
     - sqoop
+
+- name: mysqlimport (sqoop dependency) present
+  apt: pkg=mysql-client
+  tags:
+    - sqoop
