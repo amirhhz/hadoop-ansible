@@ -5,6 +5,7 @@
   sudo: true
   roles:
     - common
+    - {role: openjdk, when: jdk_choice == 'openjdk' and jdk_installed is not defined}
     - {role: oracle_jdk, when: jdk_installed is not defined }
 
 - hosts: 2_links_aggregated

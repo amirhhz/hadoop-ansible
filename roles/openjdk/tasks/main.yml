@@ -1,0 +1,11 @@
+- name: oracle-java7-installer is absent
+  apt: pkg=oracle-java7-installer state=absent
+
+- name: openjdk-7-jre is absent
+  apt: pkg=openjdk-7-jre state=absent
+
+- name: openjdk-7-jdk is present
+  apt: pkg=openjdk-7-jdk state=present
+
+- name: set fact jdk_installed
+  set_fact: jdk_installed=true
