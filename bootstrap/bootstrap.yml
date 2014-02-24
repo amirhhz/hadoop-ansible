@@ -32,7 +32,7 @@
       local_action:
         route53
         command=create
-        overwrite=no
+        overwrite=yes
         type=CNAME
         zone={{ dns_zone }}
         record={{ host_fqdn.name }}
