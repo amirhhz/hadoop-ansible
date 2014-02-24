@@ -1,11 +1,16 @@
-- name: oracle-java7-installer is absent
-  apt: pkg=oracle-java7-installer state=absent
-
-- name: openjdk-7-jre is absent
-  apt: pkg=openjdk-7-jre state=absent
+- name: no conflicting Java installations present
+  apt: pkg={{ item }} state=absent
+  with_items:
+    - oracle-java7-installer
+    - openjdk-6-jre-lib
+    - openjdk-6-jre
+    - openjdk-6-jdk
+  tags: java
 
 - name: openjdk-7-jdk is present
   apt: pkg=openjdk-7-jdk state=present
+  tags: java
 
 - name: set fact jdk_installed
   set_fact: jdk_installed=true
+  tags: java
