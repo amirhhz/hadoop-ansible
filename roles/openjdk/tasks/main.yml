@@ -11,6 +11,15 @@
   apt: pkg=openjdk-7-jdk state=present
   tags: java
 
+- name: openjdk set as JAVA_HOME globally
+  lineinfile:
+    dest=/etc/environment
+    regexp=JAVA_HOME=
+    line=JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/
+    state=present
+    backrefs=no
+  tags: java
+
 - name: set fact jdk_installed
   set_fact: jdk_installed=true
   tags: java
