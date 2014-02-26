@@ -68,9 +68,9 @@
       when: ec2_tag_Name is defined
       mount: name=/mnt src=/dev/xvdb fstype=auto state=absent
 
-    - name: find ephemeral devices attached by EC2 (/dev/xvd?)
+    - name: register unmounted (ephemeral) devices attached by EC2 (/dev/xvd?)
       when: ec2_tag_Name is defined
-      shell: ls /dev/xvd?
+      shell: blkid -o list|grep "(not mounted)"|awk -F ' ' '{print $1}'
       register: devices
 
     - name: ephemeral drives are formatted
