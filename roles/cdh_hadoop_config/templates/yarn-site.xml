@@ -18,6 +18,11 @@
         <name>yarn.nodemanager.resource.memory-mb</name>
         <value>{{ ansible_memtotal_mb - 1024 }}</value>
     </property>
+    <property>
+        <name>yarn.scheduler.minimum-allocation-mb</name>
+        <value>2048</value>
+    </property>
+
 
     <property>
         <name>yarn.resourcemanager.resource-tracker.address</name>
