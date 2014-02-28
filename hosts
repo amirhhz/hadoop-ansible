@@ -66,9 +66,6 @@ hue_server
 [hive_metastore]
 hmaster02
 
-[hive_server2]
-hmaster02
-
 
 # Presto Nodes
 # ============

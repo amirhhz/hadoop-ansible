@@ -1,9 +1,0 @@
----
-
-- name: Hiveserver2 installed
-  apt: pkg=hive-server2={{ cdh_hive_version }}
-
-- name: Hiveserver2 configured to use YARN
-  copy: src=hive-server2 dest=/etc/default/hive-server2 owner=root group=root mode=644
-  notify:
-    - restart hive-server2

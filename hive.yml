@@ -50,13 +50,6 @@
   roles:
     - cdh_hive_metastore
 
-- hosts: hive_server2
-  accelerate: "{{ accelerate }}"
-  user: ansibler
-  sudo: true
-  roles:
-    - cdh_hive_server2
-
 - hosts: namenodes[0]
   accelerate: "{{ accelerate }}"
   user: ansibler
