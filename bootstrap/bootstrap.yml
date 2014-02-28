@@ -69,6 +69,7 @@
       mount: name=/mnt src=/dev/xvdb fstype=auto state=absent
 
     - name: register unmounted (ephemeral) devices attached by EC2 (/dev/xvd?)
+      sudo_user: ubuntu
       when: ec2_tag_Name is defined
       shell: blkid -o list|grep "(not mounted)"|awk -F ' ' '{print $1}'
       register: devices
