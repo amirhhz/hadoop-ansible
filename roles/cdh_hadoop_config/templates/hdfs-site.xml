@@ -7,6 +7,11 @@
     {% set datadirs_used = [] %}
     {% for mount in ansible_mounts if "/data/volume" in mount.mount %}{% if datadirs_used.append(mount.mount) %}{% endif %}{% endfor %}
 
+
+    <property>
+        <name>dfs.hosts.exclude</name>
+        <value>/etc/hadoop/conf/dfs.hosts.exclude</value>
+    </property>
     <!-- HDFS local data locations -->
     <property>
         <name>dfs.datanode.data.dir</name>
