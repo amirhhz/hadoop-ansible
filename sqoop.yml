@@ -2,6 +2,7 @@
 - hosts: sqoop
   user: ansibler
   sudo: true
+  serial: 3 # uploading file can be problematic
   roles:
     - cdh_sqoop
   tags:
